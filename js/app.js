@@ -1,21 +1,30 @@
-// Инициализация Telegram Web App
 const tg = window.Telegram.WebApp;
-
-// Сообщаем Telegram, что приложение готово
 tg.ready();
-
-// Разворачиваем на весь экран
 tg.expand();
 
-// Устанавливаем цвета хедера
-tg.setHeaderColor('#0f111a');
-
-// Функция отправки данных боту
+// Функция для кнопок
 function sendData(action) {
+    console.log('🔹 Кнопка нажата:', action);
+    
+    // Отправляем данные
     tg.sendData(JSON.stringify({
         action: action,
         timestamp: new Date().toISOString()
     }));
+    
+    // Показываем пользователю
+    tg.showPopup({
+        title: 'Отправка',
+        message: 'Отправляю данные боту: ' + action,
+        buttons: [{type: 'ok'}]
+    });
+    
+    // НЕ закрываем окно сразу - даём данным уйти
+    setTimeout(() => {
+        tg.close();
+    }, 1000);
 }
 
-console.log('Telegram Web App initialized');
+// Проверяем загрузку
+console.log('✅ Web App загружен');
+console.log('Telegram user:', tg.initDataUnsafe.user);
