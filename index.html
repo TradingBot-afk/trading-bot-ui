@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Bot</title>
+    
+    <!-- Стили -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Telegram Web Apps SDK (добавлено) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Trading Bot v6.1</h1>
+        <p class="subtitle">Панель управления</p>
+        
+        <!-- Карточка 1: Paper Trading -->
+        <div class="card">
+            <h2>
+                📊 Paper Trading
+                <span class="status-badge">Online</span>
+            </h2>
+            <p>Баланс: $<span id="balance">1000.00</span></p>
+            <button class="btn-action" onclick="sendData('paper')">Открыть</button>
+        </div>
+
+        <!-- Карточка 2: Sniper -->
+        <div class="card">
+            <h2>
+                🎯 Sniper
+                <span class="status-badge">Active</span>
+            </h2>
+            <p>Ожидание новых листингов...</p>
+            <button class="btn-action" onclick="sendData('sniper')">Настройки</button>
+        </div>
+
+        <!-- Карточка 3: AI Agent -->
+        <div class="card">
+            <h2>
+                🤖 AI Agent
+                <span class="status-badge">Analyzing</span>
+            </h2>
+            <p>Сделок: <span id="trades">0</span> | Винрейт: <span id="winrate">0%</span></p>
+            <button class="btn-action" onclick="sendData('agent')">Анализ</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
