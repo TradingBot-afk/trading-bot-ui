@@ -12,47 +12,61 @@
         <h1>🤖 Trading Bot v6.1</h1>
         <p class="subtitle">Панель управления</p>
         
+        <!-- ТЕСТОВАЯ КНОПКА -->
+        <div style="background: #ff4757; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+            <button onclick="alert('JavaScript работает!')" style="background: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">
+                🔧 ТЕСТ: Нажми меня
+            </button>
+        </div>
+        
         <!-- Карточка 1: Paper Trading -->
-        <div class="card">
+        <div class="card" onclick="testClick('paper')" style="cursor: pointer;">
             <h2>
                 📊 Paper Trading
                 <span class="status-badge">Online</span>
             </h2>
             <p>Баланс: $<span id="balance">1000.00</span></p>
-            <button class="btn-action" onclick="handleClick('paper')">Открыть</button>
+            <button class="btn-action">Открыть</button>
         </div>
 
         <!-- Карточка 2: Sniper -->
-        <div class="card">
+        <div class="card" onclick="testClick('sniper')" style="cursor: pointer;">
             <h2>
                 🎯 Sniper
                 <span class="status-badge">Active</span>
             </h2>
             <p>Ожидание новых листингов...</p>
-            <button class="btn-action" onclick="handleClick('sniper')">Настройки</button>
+            <button class="btn-action">Настройки</button>
         </div>
 
         <!-- Карточка 3: AI Agent -->
-        <div class="card">
+        <div class="card" onclick="testClick('agent')" style="cursor: pointer;">
             <h2>
                 🤖 AI Agent
                 <span class="status-badge">Analyzing</span>
             </h2>
             <p>Сделок: <span id="trades">0</span> | Винрейт: <span id="winrate">0%</span></p>
-            <button class="btn-action" onclick="handleClick('agent')">Анализ</button>
+            <button class="btn-action">Анализ</button>
         </div>
     </div>
 
-    <script src="js/app.js"></script>
     <script>
-        // Глобальная функция для кнопок
-        function handleClick(action) {
-            if (typeof sendData === 'function') {
-                sendData(action);
-            } else {
-                alert('Ошибка: sendData не загружен');
+        // Простая функция для теста
+        function testClick(action) {
+            alert('Карточка нажата: ' + action);
+            
+            // Отправка в Telegram
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.sendData(JSON.stringify({
+                    action: action,
+                    timestamp: new Date().toISOString()
+                }));
+                setTimeout(() => tg.close(), 500);
             }
         }
+        
+        console.log('✅ Страница загружена');
     </script>
 </body>
 </html>
