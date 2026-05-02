@@ -27,47 +27,62 @@
         <div class="card">
             <h2>📊 Paper Trading <span class="badge">Online</span></h2>
             <p>Баланс: $1000.00</p>
-            <button class="btn" onclick="testSend('paper')">Открыть</button>
+            <button class="btn" onclick="handleClick('paper')">Открыть</button>
         </div>
 
         <div class="card">
             <h2>🎯 Sniper <span class="badge">Active</span></h2>
             <p>Ожидание новых листингов...</p>
-            <button class="btn" onclick="testSend('sniper')">Настройки</button>
+            <button class="btn" onclick="handleClick('sniper')">Настройки</button>
         </div>
 
         <div class="card">
-            <h2>🤖 AI Agent <span class="badge">Analyzing</span></h2>
+            <h2> AI Agent <span class="badge">Analyzing</span></h2>
             <p>Сделок: 0 | Винрейт: 0%</p>
-            <button class="btn" onclick="testSend('agent')">Анализ</button>
+            <button class="btn" onclick="handleClick('agent')">Анализ</button>
         </div>
     </div>
 
     <script>
         console.log('🔹 Страница загружена');
+        
+        // Инициализация Telegram
         const tg = window.Telegram.WebApp;
+        console.log('🔹 Telegram объект:', tg);
+        
         tg.ready();
-        console.log('🔹 Telegram WebApp готов:', tg);
+        tg.expand();
+        console.log('🔹 Telegram готов');
 
-        function testSend(action) {
-            console.log('🔹 Кнопка нажата:', action);
-            alert('Начинаю отправку: ' + action);
+        function handleClick(action) {
+            console.log('🔹 Клик по кнопке:', action);
+            alert('1. Кнопка нажата: ' + action);
+            
+            // Проверяем Telegram SDK
+            if (!tg || !tg.sendData) {
+                alert('❌ Ошибка: Telegram SDK не загружен!');
+                return;
+            }
+            
+            alert('2. Отправляю данные через tg.sendData...');
             
             try {
                 const data = JSON.stringify({ action: action });
-                console.log('🔹 Отправляю данные:', data);
+                console.log('🔹 Отправляю:', data);
                 
                 tg.sendData(data);
-                alert('Данные отправлены! Закрываю окно...');
+                console.log('🔹 sendData вызван успешно');
+                
+                alert('3. Данные отправлены! Закрываю окно...');
                 
                 setTimeout(() => {
                     tg.close();
                     console.log('🔹 Окно закрыто');
-                }, 1000);
+                }, 500);
                 
             } catch (error) {
                 console.error('❌ Ошибка:', error);
-                alert('Ошибка: ' + error);
+                alert('❌ Ошибка отправки: ' + error);
             }
         }
     </script>
