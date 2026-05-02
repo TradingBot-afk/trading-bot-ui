@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trading Bot</title>
     <style>
-        :root {
-            --bg: #0f111a;
-            --card: #1c1f2e;
-            --text: #ffffff;
-            --sub: #8b9bb4;
-            --btn: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            --green: #10b981;
-        }
+        :root { --bg: #0f111a; --card: #1c1f2e; --text: #ffffff; --sub: #8b9bb4; --btn: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); --green: #10b981; }
         body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 400px; margin: 0 auto; }
         h1 { text-align: center; margin-bottom: 5px; font-size: 22px; }
@@ -22,9 +15,8 @@
         .card p { margin: 0 0 15px 0; color: var(--sub); font-size: 14px; }
         .badge { background: rgba(16,185,129,0.2); color: var(--green); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         .btn { background: var(--btn); color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
-        .btn:active { opacity: 0.8; transform: scale(0.98); }
+        .btn:active { opacity: 0.8; }
     </style>
-    <!-- Telegram SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -35,31 +27,48 @@
         <div class="card">
             <h2>📊 Paper Trading <span class="badge">Online</span></h2>
             <p>Баланс: $1000.00</p>
-            <button class="btn" onclick="sendData('paper')">Открыть</button>
+            <button class="btn" onclick="testSend('paper')">Открыть</button>
         </div>
 
         <div class="card">
             <h2>🎯 Sniper <span class="badge">Active</span></h2>
             <p>Ожидание новых листингов...</p>
-            <button class="btn" onclick="sendData('sniper')">Настройки</button>
+            <button class="btn" onclick="testSend('sniper')">Настройки</button>
         </div>
 
         <div class="card">
-            <h2> AI Agent <span class="badge">Analyzing</span></h2>
+            <h2>🤖 AI Agent <span class="badge">Analyzing</span></h2>
             <p>Сделок: 0 | Винрейт: 0%</p>
-            <button class="btn" onclick="sendData('agent')">Анализ</button>
+            <button class="btn" onclick="testSend('agent')">Анализ</button>
         </div>
     </div>
 
     <script>
+        console.log('🔹 Страница загружена');
         const tg = window.Telegram.WebApp;
         tg.ready();
+        console.log('🔹 Telegram WebApp готов:', tg);
 
-        function sendData(action) {
-            // Отправляем данные боту
-            tg.sendData(JSON.stringify({ action: action }));
-            // Закрываем окно через 500мс, чтобы данные успели уйти в Telegram
-            setTimeout(() => tg.close(), 500);
+        function testSend(action) {
+            console.log('🔹 Кнопка нажата:', action);
+            alert('Начинаю отправку: ' + action);
+            
+            try {
+                const data = JSON.stringify({ action: action });
+                console.log('🔹 Отправляю данные:', data);
+                
+                tg.sendData(data);
+                alert('Данные отправлены! Закрываю окно...');
+                
+                setTimeout(() => {
+                    tg.close();
+                    console.log('🔹 Окно закрыто');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('❌ Ошибка:', error);
+                alert('Ошибка: ' + error);
+            }
         }
     </script>
 </body>
