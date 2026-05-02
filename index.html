@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trading Bot</title>
     <style>
-        :root { --bg: #0f111a; --card: #1c1f2e; --text: #ffffff; --sub: #8b9bb4; --btn: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); --green: #10b981; }
-        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; }
+        :root { --bg: #0f111a; --card: #1c1f2e; --text: #ffffff; --sub: #8b9bb4; --green: #10b981; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; margin: 0; padding: 20px; padding-bottom: 80px; }
         .container { max-width: 400px; margin: 0 auto; }
         h1 { text-align: center; margin-bottom: 5px; font-size: 22px; }
         .subtitle { text-align: center; color: var(--sub); font-size: 14px; margin-bottom: 25px; }
         .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
         .card h2 { margin: 0 0 8px 0; font-size: 17px; display: flex; align-items: center; gap: 10px; }
-        .card p { margin: 0 0 15px 0; color: var(--sub); font-size: 14px; }
+        .card p { margin: 0; color: var(--sub); font-size: 14px; }
         .badge { background: rgba(16,185,129,0.2); color: var(--green); padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .btn { background: var(--btn); color: white; border: none; width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
-        .btn:active { opacity: 0.8; }
+        .status { text-align: center; margin-top: 20px; padding: 10px; border-radius: 8px; background: #2a2d3a; }
     </style>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -24,66 +23,56 @@
         <h1>🤖 Trading Bot</h1>
         <p class="subtitle">Панель управления</p>
 
-        <div class="card">
+        <div class="card" onclick="selectAction('paper')">
             <h2>📊 Paper Trading <span class="badge">Online</span></h2>
             <p>Баланс: $1000.00</p>
-            <button class="btn" onclick="handleClick('paper')">Открыть</button>
         </div>
 
-        <div class="card">
+        <div class="card" onclick="selectAction('sniper')">
             <h2>🎯 Sniper <span class="badge">Active</span></h2>
             <p>Ожидание новых листингов...</p>
-            <button class="btn" onclick="handleClick('sniper')">Настройки</button>
         </div>
 
-        <div class="card">
+        <div class="card" onclick="selectAction('agent')">
             <h2> AI Agent <span class="badge">Analyzing</span></h2>
             <p>Сделок: 0 | Винрейт: 0%</p>
-            <button class="btn" onclick="handleClick('agent')">Анализ</button>
         </div>
+
+        <div class="status" id="statusBox">Выберите раздел</div>
     </div>
 
     <script>
-        console.log('🔹 Страница загружена');
-        
-        // Инициализация Telegram
         const tg = window.Telegram.WebApp;
-        console.log('🔹 Telegram объект:', tg);
-        
         tg.ready();
         tg.expand();
-        console.log('🔹 Telegram готов');
+        
+        // Настраиваем главную кнопку Telegram
+        tg.MainButton.setParams({
+            text: 'ОТПРАВИТЬ ВЫБОР',
+            color: '#3b82f6',
+            text_color: '#ffffff',
+            is_active: true,
+            is_visible: false
+        });
 
-        function handleClick(action) {
-            console.log('🔹 Клик по кнопке:', action);
-            alert('1. Кнопка нажата: ' + action);
-            
-            // Проверяем Telegram SDK
-            if (!tg || !tg.sendData) {
-                alert('❌ Ошибка: Telegram SDK не загружен!');
-                return;
+        let currentAction = '';
+
+        tg.MainButton.onClick(function() {
+            if (currentAction) {
+                console.log('MainButton нажата, отправка:', currentAction);
+                // Отправляем данные
+                tg.sendData(JSON.stringify({ action: currentAction }));
             }
+        });
+
+        function selectAction(action) {
+            currentAction = action;
+            document.getElementById('statusBox').innerText = 'Выбрано: ' + action.toUpperCase();
+            document.getElementById('statusBox').style.background = '#3b82f6';
             
-            alert('2. Отправляю данные через tg.sendData...');
-            
-            try {
-                const data = JSON.stringify({ action: action });
-                console.log('🔹 Отправляю:', data);
-                
-                tg.sendData(data);
-                console.log('🔹 sendData вызван успешно');
-                
-                alert('3. Данные отправлены! Закрываю окно...');
-                
-                setTimeout(() => {
-                    tg.close();
-                    console.log('🔹 Окно закрыто');
-                }, 500);
-                
-            } catch (error) {
-                console.error('❌ Ошибка:', error);
-                alert('❌ Ошибка отправки: ' + error);
-            }
+            // Показываем нативную кнопку Telegram
+            tg.MainButton.show();
+            tg.MainButton.setText('ОТПРАВИТЬ: ' + action.toUpperCase());
         }
     </script>
 </body>
