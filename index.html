@@ -7,48 +7,43 @@
     <style>
         body { background: #0f111a; color: white; padding: 20px; text-align: center; font-family: sans-serif; }
         .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #3b82f6; border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+        #status { margin-top: 20px; padding: 10px; background: #1c1f2e; border-radius: 8px; font-size: 12px; }
     </style>
 </head>
 <body>
-    <h2>🧪 ТЕСТ WEB APP</h2>
-    <p>Нажми кнопку:</p>
-    
-    <button class="btn" onclick="testSend('paper')">📊 ТЕСТ 1: Paper</button>
-    <button class="btn" onclick="testSend('sniper')">🎯 ТЕСТ 2: Sniper</button>
-    
-    <div id="log" style="margin-top: 20px; padding: 10px; background: #1c1f2e; border-radius: 8px; font-size: 12px; text-align: left;"></div>
+    <h2>🧪 ФИНАЛЬНЫЙ ТЕСТ</h2>
+    <button class="btn" onclick="send('paper')">📊 Paper</button>
+    <button class="btn" onclick="send('sniper')">🎯 Sniper</button>
+    <div id="status"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
         
-        const logDiv = document.getElementById('log');
+        const status = document.getElementById('status');
         
-        function log(msg) {
-            logDiv.innerHTML += '<br>🔹 ' + msg;
+        function show(msg) {
+            status.innerHTML += '<br>• ' + msg;
             console.log(msg);
         }
 
-        function testSend(action) {
-            log('1. Кнопка нажата: ' + action);
+        function send(action) {
+            show('Отправка: ' + action);
             
-            // Способ 1: Через Telegram SDK
+            // Способ 1: Стандартный sendData
             try {
-                log('2. Вызываю tg.sendData...');
-                const data = JSON.stringify({ action: action });
-                tg.sendData(data);
-                log('3. sendData вызван успешно!');
-                
-                setTimeout(() => {
-                    log('4. Закрываю окно...');
-                    tg.close();
-                }, 1000);
-                
-            } catch (e) {
-                log('❌ Ошибка sendData: ' + e.message);
-                tg.showAlert('Ошибка: ' + e.message);
+                tg.sendData(JSON.stringify({ action: action }));
+                show('✓ sendData отправлен');
+            } catch(e) {
+                show('✗ sendData ошибка: ' + e.message);
             }
+            
+            // Способ 2: Закрываем окно (Telegram сам должен отправить данные)
+            setTimeout(() => {
+                show('Закрываю окно...');
+                tg.close();
+            }, 1000);
         }
     </script>
 </body>
