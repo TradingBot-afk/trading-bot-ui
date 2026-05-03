@@ -2,34 +2,35 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>Trading Bot Test</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { background: #0f111a; color: white; padding: 20px; text-align: center; font-family: sans-serif; }
-        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #3b82f6; border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+        body { background: #0f111a; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 15px 0; background: #3b82f6; color: white; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; }
+        .btn:active { background: #2563eb; }
     </style>
 </head>
 <body>
-    <h2>🧪 ТЕСТ (Без авто-закрытия)</h2>
-    <p>Нажми кнопку. Окно НЕ закроется, чтобы данные успели уйти.</p>
-    
-    <button class="btn" onclick="send('paper')"> Paper Trading</button>
-    <button class="btn" onclick="send('sniper')">🎯 Sniper</button>
+    <h1>🧪 Тест связи</h1>
+    <p>Нажми кнопку ниже:</p>
+
+    <button class="btn" onclick="sendData('paper')">📊 Paper Trading</button>
+    <button class="btn" onclick="sendData('sniper')">🎯 Sniper</button>
+    <button class="btn" onclick="sendData('agent')">🤖 AI Agent</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        
-        function send(action) {
+        tg.expand();
+
+        function sendData(action) {
+            // Отправляем данные
             try {
-                // 1. Отправляем данные
                 tg.sendData(JSON.stringify({ action: action }));
-                
-                // 2. Меняем текст на экране (не закрываем окно!)
-                document.body.innerHTML = '<h1 style="color:#10b981; font-size: 40px;">✅ УСПЕХ!</h1><p>Данные отправлены.</p><p>Закрой окно вручную (крестик).</p>';
-                
-            } catch(e) {
-                document.body.innerHTML = '<h1 style="color:red;">❌ ОШИБКА</h1><p>' + e + '</p>';
+                // Показываем сообщение об успехе, но НЕ закрываем окно сразу
+                document.body.innerHTML = '<h2 style="color:#10b981; margin-top:50px;">✅ Данные отправлены!</h2><p>Можешь закрыть окно крестиком.</p>';
+            } catch (e) {
+                alert('Ошибка: ' + e);
             }
         }
     </script>
